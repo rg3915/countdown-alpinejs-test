@@ -1,0 +1,116 @@
+<!-- https://albert-gonzalez.github.io/easytimer.js/#countdownTimerExample -->
+<!-- https://codepen.io/harsh/pen/KKdEVPV -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="http://html5-training-in-hyderabad.blogspot.com.br/favicon.ico">
+
+    <title>EasyTimer</title>
+
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+    <!-- AlpineJS -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- EasyTimer -->
+    <script src="js/easytimer.min.js"></script>
+
+    <style>
+      .timer{
+        display:flex;
+      }
+      .timer h1 + h1:before{
+        content:":"
+      }
+    </style>
+  </head>
+  <body>
+  <section class="section">
+    <div
+      class="container"
+      x-data="timer(new Date().getTime() + 1000 * 60 * 0 + 10 * 1000)"
+    >
+
+      <button id="btnStart" class="button is-primary" onclick="startCountdown()">Start</button>
+      <!-- <button id="btnSave" class="button is-info" onclick="saveTime()">Save</button> -->
+
+      <div id="countdownExample">
+        <div class="values title"></div>
+      </div>
+
+      <br>
+
+      <div class="timer title">
+        <h1 x-text="time().minutes"></h1>
+        <h1 x-text="time().seconds"></h1>
+      </div>
+
+      <br>
+
+      <button id="btnRestart" class="button is-info" @click="restartTime">Restart</button>
+
+    </div>
+  </section>
+
+  <script>
+    function timer(expiry) {
+      return {
+        expiry: expiry,
+        remaining: null,
+        interval: null,
+        oneMinute: 1000 * 60,
+        incrementMinutes: 2,
+        init() {
+          this.setRemaining()
+          this.interval = setInterval(() => {
+            this.setRemaining();
+          }, 1000);
+        },
+        restartTime() {
+          fetch('http://localhost:3000/endtime')
+            .then((response) => response.json())
+            .then((data) => {
+              const currentTime = this.expiry - new Date().getTime()
+              if (currentTime <= this.oneMinute * this.incrementMinutes) {
+                const minutes = data.minutes * this.oneMinute
+                const seconds = data.seconds * 1000
+                this.expiry = new Date().getTime() + minutes + seconds + 1000
+              }
+            })
+        },
+        setRemaining() {
+          const diff = this.expiry - new Date().getTime();
+          if (diff <= 1000) {
+            document.getElementById("btnRestart").setAttribute("disabled","disabled");
+            clearInterval(this.interval)
+          }
+          this.remaining = parseInt(diff / 1000);
+        },
+        minutes() {
+          return {
+            value: Math.floor(this.remaining / 60),
+            remaining: this.remaining % 60
+          };
+        },
+        seconds() {
+          return {
+            value: this.minutes().remaining,
+          };
+        },
+        format(value) {
+          return ("0" + parseInt(value)).slice(-2)
+        },
+        time(){
+          return {
+            minutes:this.format(this.minutes().value),
+            seconds:this.format(this.seconds().value),
+          }
+        },
+      }
+    }
+  </script>
+  </body>
+</html>
