@@ -1,9 +1,6 @@
 {
     "hora": {
-      "hora_inicial": "2023-01-24 03:09:00",
-      "tempo_total": {
-          "minutos": 10,
-          "segundos": 0
-      }
+      "hora_inicial": "2023-01-24 04:13:00",
+      "hora_final": "2023-01-24 04:23:00"
     }
 }

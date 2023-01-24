@@ -1,6 +1,6 @@
-function timer(expiry) {
+function timer() {
   return {
-    expiry: expiry,
+    expiry: null,
     remaining: null,
     interval: null,
     intervalRemainingTime: null,
@@ -10,6 +10,7 @@ function timer(expiry) {
     remainingTimeStr: '',
     initialTime: '',
     initialTimeFull: '',
+    finalTimeFull: '',
     started: false,
     oneMinute: 1000 * 60,
     incrementMinutes: 2,
@@ -70,12 +71,15 @@ function timer(expiry) {
         .then((data) => {
           this.initialTime = data.hora_inicial.slice(-8)
           this.initialTimeFull = data.hora_inicial
+          this.finalTimeFull = data.hora_final
+
           if (this.currentTime >= this.initialTimeFull) {
             this.started = true
             console.log('maior')
           } else {
             console.log('menor')
           }
+
         })
         .catch((error) => {
           console.error('Error:', error)
@@ -112,14 +116,19 @@ function timer(expiry) {
     setRemaining() {
       if (!this.started) return
 
-      const diff = this.expiry - new Date().getTime()
+      Promise.all([this.getTime()])
+        .then(() => {
+          let finalTime = new Date(this.finalTimeFull)
+          const diff = finalTime - new Date().getTime()
 
-      if (diff <= 1000) {
-        document.getElementById('btnRestart').setAttribute('disabled', 'disabled')
-        clearInterval(this.interval)
-      }
+          if (diff <= 1000) {
+            document.getElementById('btnRestart').setAttribute('disabled', 'disabled')
+            clearInterval(this.interval)
+          }
 
-      this.remaining = parseInt(diff / 1000)
+          this.remaining = parseInt(diff / 1000)
+        })
+
     },
 
     minutes() {
