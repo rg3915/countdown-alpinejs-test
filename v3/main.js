@@ -2,7 +2,6 @@ function timer(expiry) {
   return {
     expiry: expiry,
     remaining: null,
-    intervalTest: null,
     interval: null,
     intervalRemainingTime: null,
     currentTimeGlobal: '',
@@ -18,10 +17,6 @@ function timer(expiry) {
     init() {
       setInterval(() => {
         this.getCurrentTimeGlobal()
-      }, 1000)
-
-      this.intervalTest = setInterval(() => {
-        this.getTime()
       }, 1000)
 
       this.setRemaining()
@@ -77,7 +72,6 @@ function timer(expiry) {
           this.initialTimeFull = data.hora_inicial
           if (this.currentTime >= this.initialTimeFull) {
             this.started = true
-            clearInterval(this.intervalTest)
             console.log('maior')
           } else {
             console.log('menor')
