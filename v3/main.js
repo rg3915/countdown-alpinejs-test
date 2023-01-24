@@ -17,6 +17,7 @@ function timer() {
 
     init() {
       setInterval(() => {
+        // Retorna hora atual constantemente
         this.getCurrentTimeGlobal()
       }, 1000)
 
@@ -47,6 +48,7 @@ function timer() {
     },
 
     getCurrentTime() {
+      // Retorna a hora atual no formato 'yyyy-mm-dd HH:MM:SS'
       const currentTime = new Date()
       const currentTimeStr = currentTime.getFullYear() + '-' + 
           ('0' + (currentTime.getMonth()+1)).slice(-2) + '-' + 
@@ -58,11 +60,36 @@ function timer() {
       return currentTimeStr
     },
 
+    getRemainingTime(endDate) {
+      // Converte o tempo em HH:MM:SS
+      let currentDate = new Date()
+      let diff = endDate - currentDate
+
+      let days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      let seconds = Math.floor((diff % (1000 * 60)) / 1000) + 1
+
+      let hoursStr = hours < 10 ? `0${hours}` : hours
+      let minutesStr = minutes < 10 ? `0${minutes}` : minutes
+      let secondsStr = seconds < 10 ? `0${seconds}` : seconds
+
+      let remainingTime = hoursStr + ':' + minutesStr + ':' + secondsStr
+      return {
+        remainingTime: remainingTime,
+        hours: hours,
+        minutes: minutes,
+      }
+    },
+
     getCurrentTimeGlobal() {
+      // Calcula hora atual
+      // Retorna hora atual constantemente
       this.currentTimeGlobal = this.getCurrentTime().slice(-8)
     },
 
     getTime() {
+      // Pega hora_inicial e hora_final no backend
       this.currentTime = this.getCurrentTime()
       this.currentTimeString = this.getCurrentTime().slice(-8)
 
@@ -73,6 +100,11 @@ function timer() {
           this.initialTimeFull = data.hora_inicial
           this.finalTimeFull = data.hora_final
 
+          /*
+          Se a hora atual for maior ou igual a hora inicial, então
+          define started igual a true.
+          O started é usado como parâmetro para definir a classe no template.
+          */ 
           if (this.currentTime >= this.initialTimeFull) {
             this.started = true
             console.log('maior')
@@ -87,23 +119,13 @@ function timer() {
     },
 
     remainingTime() {
+      // Calcula o tempo que falta para iniciar o contador.
       Promise.all([this.getTime()])
         .then(() => {
           let endDate = new Date(this.initialTimeFull)
 
-          let currentDate = new Date()
-          let diff = endDate - currentDate
-
-          let days = Math.floor(diff / (1000 * 60 * 60 * 24))
-          let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-          let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-          let seconds = Math.floor((diff % (1000 * 60)) / 1000) + 1
-
-          let hoursStr = hours < 10 ? `0${hours}` : hours
-          let minutesStr = minutes < 10 ? `0${minutes}` : minutes
-          let secondsStr = seconds < 10 ? `0${seconds}` : seconds
-
-          let remainingTime = hoursStr + ':' + minutesStr + ':' + secondsStr
+          // Object return multiple values.
+          const { remainingTime, hours, minutes} = this.getRemainingTime(endDate)
           this.remainingTimeStr = remainingTime
 
           if (hours <= -1 && minutes <= -1) {
@@ -114,6 +136,7 @@ function timer() {
     },
 
     setRemaining() {
+      // Atualiza o contador principal.
       if (!this.started) return
 
       Promise.all([this.getTime()])
