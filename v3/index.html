@@ -20,72 +20,114 @@
 </head>
 
 <body>
-  <section class="section">
-    <div
-      class="container"
-      x-data="timer()"
-    >
-      <p class="is-size-6 has-text-link" x-text="currentTimeGlobal + ' Hora atual'"></p>
-      <p class="is-size-6" x-text="initialTime + ' Hora inicial'"></p>
-      <span class="is-size-4" :class="started ? 'has-text-primary' : 'has-text-link'" x-text="currentTimeString"></span><small class="is-small"> Hora atual, muda de cor caso seja antes ou depois da hora inicial</small> <br>
-      <span class="is-size-4 has-text-danger" x-text="remainingTimeStr"></span><small> Tempo para iniciar o contador</small>
-      <div class="timer">
-        <h1
-          class="title"
-          x-text="time().minutes"
-        ></h1>
-        <h1
-          class="title"
-          x-text="time().seconds"
-        ></h1>
-        <span
-          class="tag is-success is-size-8 mt-2 ml-2"
-          x-show="reStarted"
-        >+ 2min</span>
+  <section
+    class="section"
+    x-data="timer()"
+  >
+    <div class="container">
+      <h1 class="title">Simple Dashboard</h1>
+      <p class="subtitle">An example of a simple dashboard using Bulma</p>
+
+      <div class="notification is-primary">
+        <p x-text="currentTimeGlobal + ' Hora atual'"></p>
       </div>
-
-      <br>
-
-      <button
-        id="btnRestart"
-        class="button is-primary"
-        @click="restartTime"
-      >Salvar e Adicionar</button>
-      <p>Adiciona 2 minutos.</p>
-
-      <div class="column is-half">
-        <p>Defina o tempo para salvar no backend. Minutos somados a partir de agora.</p>
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <label class="label">Minuto Inicial</label>
+      <hr>
+      <div class="columns">
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <p>O cronômetro vai começar as</p>
+              <p class="subtitle" x-text="initialTime"></p>
+            </div>
           </div>
-          <input
-            type="number"
-            class="input"
-            step="1"
-            min="0"
-            x-model.number="newTime.minuteInitial"
-          >
-
-          <div class="field-label ml-5">
-            <label class="label">Minuto Final</label>
+        </div>
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <p class="title">Hora Atual</p>
+              <p class="title" :class="started ? 'has-text-primary' : 'has-text-link'" x-text="currentTimeString"></p>
+              <small class="is-size-7">Muda de cor caso seja antes ou depois da hora inicial.</small>
+            </div>
           </div>
-          <input
-            type="number"
-            class="input"
-            step="1"
-            min="0"
-            x-model.number="newTime.minuteFinal"
-          >
+        </div>
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <p class="title">Tempo Restante</p>
+              <p class="title has-text-danger" x-text="remainingTimeStr"></p>
+              <small class="is-size-7">Tempo para iniciar o contador.</small>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <p class="title">Cronômetro</p>
+              <div class="timer">
+                <h1
+                  class="title"
+                  x-text="time().minutes"
+                ></h1>
+                <h1
+                  class="title"
+                  x-text="time().seconds"
+                ></h1>
+                <span
+                  class="tag is-success is-size-8 mt-2 ml-2"
+                  x-show="reStarted"
+                >+ 2min</span>
+              </div>
+
+              <button
+                id="btnRestart"
+                class="button is-primary"
+                @click="restartTime"
+              >Salvar e Adicionar</button>
+              <p>Adiciona 2 minutos.</p>
+            </div>
+          </div>
         </div>
       </div>
+      <div class="column is-half">
+        <div class="card">
+          <div class="card-content">
+            <div class="column">
+              <p>Defina o tempo para salvar no backend. Minutos somados a partir de agora.</p>
+              <div class="field is-horizontal">
+                <div class="field-label">
+                  <label class="label">Minuto Inicial</label>
+                </div>
+                <input
+                  type="number"
+                  class="input"
+                  step="1"
+                  min="0"
+                  x-model.number="newTime.minuteInitial"
+                >
 
-      <button
-        class="button is-warning"
-        @click="saveNewTimes"
-      >Salvar Novo Tempo</button>
+                <div class="field-label ml-5">
+                  <label class="label">Minuto Final</label>
+                </div>
+                <input
+                  type="number"
+                  class="input"
+                  step="1"
+                  min="0"
+                  x-model.number="newTime.minuteFinal"
+                >
+              </div>
+            </div>
+
+            <button
+              class="button is-warning"
+              @click="saveNewTimes"
+            >Salvar Novo Tempo</button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
   <script src="main.js"></script>
 </body>
 
