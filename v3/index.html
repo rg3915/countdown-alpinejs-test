@@ -42,6 +42,38 @@
         @click="restartTime"
       >Salvar e Adicionar</button>
       <p>Adiciona 2 minutos.</p>
+
+      <div class="column is-half">
+        <p>Defina o tempo para salvar no backend. Minutos somados a partir de agora.</p>
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <label class="label">Minuto Inicial</label>
+          </div>
+          <input
+            type="number"
+            class="input"
+            step="1"
+            min="0"
+            x-model.number="newTime.minuteInitial"
+          >
+
+          <div class="field-label ml-5">
+            <label class="label">Minuto Final</label>
+          </div>
+          <input
+            type="number"
+            class="input"
+            step="1"
+            min="0"
+            x-model.number="newTime.minuteFinal"
+          >
+        </div>
+      </div>
+
+      <button
+        class="button is-warning"
+        @click="saveNewTimes"
+      >Salvar Novo Tempo</button>
     </div>
   </section>
   <script src="main.js"></script>

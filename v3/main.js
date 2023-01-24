@@ -14,6 +14,10 @@ function timer() {
     started: false,
     oneMinute: 1000 * 60,
     incrementMinutes: 2,
+    newTime: {
+      minuteInitial: 2,
+      minuteFinal: 10,
+    },
 
     init() {
       setInterval(() => {
@@ -50,14 +54,7 @@ function timer() {
     getCurrentTime() {
       // Retorna a hora atual no formato 'yyyy-mm-dd HH:MM:SS'
       const currentTime = new Date()
-      const currentTimeStr = currentTime.getFullYear() + '-' + 
-          ('0' + (currentTime.getMonth()+1)).slice(-2) + '-' + 
-          ('0' + currentTime.getDate()).slice(-2) + ' ' + 
-          ('0' + currentTime.getHours()).slice(-2) + ':' + 
-          ('0' + currentTime.getMinutes()).slice(-2) + ':' + 
-          ('0' + currentTime.getSeconds()).slice(-2)
-      // console.log(currentTimeStr) // 'yyyy-mm-dd HH:MM:SS'
-      return currentTimeStr
+      return this.convertTimetoString(currentTime)
     },
 
     getRemainingTime(endDate) {
@@ -80,6 +77,17 @@ function timer() {
         hours: hours,
         minutes: minutes,
       }
+    },
+
+    convertTimetoString(currentTime) {
+      const currentTimeStr = currentTime.getFullYear() + '-' + 
+          ('0' + (currentTime.getMonth()+1)).slice(-2) + '-' + 
+          ('0' + currentTime.getDate()).slice(-2) + ' ' + 
+          ('0' + currentTime.getHours()).slice(-2) + ':' + 
+          ('0' + currentTime.getMinutes()).slice(-2) + ':' + 
+          ('0' + currentTime.getSeconds()).slice(-2)
+      // console.log(currentTimeStr) // 'yyyy-mm-dd HH:MM:SS'
+      return currentTimeStr
     },
 
     getCurrentTimeGlobal() {
@@ -152,6 +160,32 @@ function timer() {
           this.remaining = parseInt(diff / 1000)
         })
 
+    },
+
+    saveNewTimes() {
+      let dateString = this.getCurrentTime()
+      let dateInitial = new Date(dateString)
+      let dateFinal = new Date(dateString)
+
+      // Add 5 minutes to the dateInitial object.
+      dateInitial.setMinutes(dateInitial.getMinutes() + this.newTime.minuteInitial)
+
+      // Add 5 minutes to the dateFinal object.
+      dateFinal.setMinutes(dateFinal.getMinutes() + this.newTime.minuteFinal)
+
+      // Convert to string.
+      newDateInitialString = this.convertTimetoString(dateInitial)
+      newDateFinalString = this.convertTimetoString(dateFinal)
+
+      fetch('http://localhost:3000/hora', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          hora_inicial: newDateInitialString,
+          hora_final: newDateFinalString,
+        }),
+      })
+        .then(location.reload())
     },
 
     minutes() {
