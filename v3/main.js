@@ -18,6 +18,7 @@ function timer() {
       minuteInitial: 2,
       minuteFinal: 10,
     },
+    reStarted: false,
 
     init() {
       setInterval(() => {
@@ -40,6 +41,10 @@ function timer() {
       fetch('http://localhost:3000/tempo_total')
         .then((response) => response.json())
         .then((data) => {
+          this.reStarted = true
+
+          this.expiry = new Date().getTime() + 2 * this.oneMinute + 1000
+
           const currentTime = this.expiry - new Date().getTime()
 
           if (currentTime <= this.oneMinute * this.incrementMinutes) {
@@ -149,8 +154,14 @@ function timer() {
 
       Promise.all([this.getTime()])
         .then(() => {
-          let finalTime = new Date(this.finalTimeFull)
-          const diff = finalTime - new Date().getTime()
+          let diff = null
+
+          if (this.reStarted) {
+            diff = this.expiry - new Date().getTime()
+          } else {
+            const finalTime = new Date(this.finalTimeFull)
+            diff = finalTime - new Date().getTime()
+          }
 
           if (diff <= 1000) {
             document.getElementById('btnRestart').setAttribute('disabled', 'disabled')

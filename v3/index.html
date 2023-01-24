@@ -29,9 +29,19 @@
       <p class="is-size-6" x-text="initialTime + ' Hora inicial'"></p>
       <span class="is-size-4" :class="started ? 'has-text-primary' : 'has-text-link'" x-text="currentTimeString"></span><small class="is-small"> Hora atual, muda de cor caso seja antes ou depois da hora inicial</small> <br>
       <span class="is-size-4 has-text-danger" x-text="remainingTimeStr"></span><small> Tempo para iniciar o contador</small>
-      <div class="timer title">
-        <h1 x-text="time().minutes"></h1>
-        <h1 x-text="time().seconds"></h1>
+      <div class="timer">
+        <h1
+          class="title"
+          x-text="time().minutes"
+        ></h1>
+        <h1
+          class="title"
+          x-text="time().seconds"
+        ></h1>
+        <span
+          class="tag is-success is-size-8 mt-2 ml-2"
+          x-show="reStarted"
+        >+ 2min</span>
       </div>
 
       <br>
